@@ -21,7 +21,7 @@ resource "aws_instance" "MyFirstInstnace" {
   ami           = data.aws_ami.latest-ubuntu.id
   instance_type = "t2.micro"
   availability_zone = data.aws_availability_zones.available.names[0]
-  security_groups = "custom_us_east"
+  security_groups = [aws_security_group.sg-custom_us_east.id]
   # provisioner "local-exec" {
     # command = "echo ${aws_instance.MyFirstInstnace.private_ip} >> my_private_ips.txt"
   # }
