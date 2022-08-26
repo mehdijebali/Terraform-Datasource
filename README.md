@@ -22,5 +22,22 @@ data "aws_ami" "latest-ubuntu" {
   }
 }
 ```
-
-
+## Output Attribute
+Terraform keeps track of all resources and its attributes, so it is possible to query and retain outputs and use it for provisionnig other resources. We obtain output attributes afer running `terraform apply`. In contrast, outputs will not be rendered while running `terraform plan`.
+In this example, we query the instance IP addresses (public, private) using two different methods:
+#### Output Block
+Each output value exported by a module can be declared using an output block: 
+```
+output "public_ip" {
+  value = aws_instance.MyFirstInstnace.public_ip 
+}
+```
+The value argument takes an expression whose result is to be
+returned to the user.
+#### Script
+We can execute script that expose the required value by using the provisioner block which is configured inside the resource block:
+```
+provisioner "local-exec" {
+    command = "echo ${aws_instance.MyFirstInstnace.private_ip} >> my_private_ips.txt"
+  }
+```
