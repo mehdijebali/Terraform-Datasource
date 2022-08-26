@@ -41,3 +41,23 @@ provisioner "local-exec" {
     command = "echo ${aws_instance.MyFirstInstnace.private_ip} >> my_private_ips.txt"
   }
 ```
+## Remote State
+Remote is useful for creating remote backend that solves the problems of:
+#### Manual error
+Once you configure a remote backend, Terraform will automatically load the state file from that backend every time you run plan or apply and it will automatically store the state file in that backend after each apply, so there’s no chance of manual error.
+#### Locking
+Most of the remote backends natively support locking. When you run `terraform apply`, Terraform will automatically acquire a lock; if someone else is already running apply, they will already have the lock, and you will have to wait.
+#### Secrets
+Most of the remote backends natively support encryption in transit and encryption on disk of the state file.
+
+We proceed with saving the remote state in S3 bucket, the file **backend.tf** contains the S3 bucket configuration:
+```
+terraform {
+    backend "s3" {
+        bucket = "tf-s3-backend"
+        key    = "development/terraform_state"
+        region = "us-east-1"
+    }
+}
+```
+
